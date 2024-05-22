@@ -17,10 +17,22 @@
     </style>
   </head>
   <body>
+    <h1>자기소개</h1>
+    <textarea class="form-control" id="jasoseo" rows="3" onkeydown="counter()">
+테스트</textarea
+    >
+    <span id="count">(0/200)</span>
     <script>
-      document.querySelector(); // 속도가 느림
-      document.getElementById();
-      document.getElementsByClassName();
+      function counter() {
+        var content = document.getElementById("jasoseo").value;
+        if (content.length > 200) {
+          content = content.substring(0, 200);
+          document.getElementById("jasoseo").value = content;
+        }
+        document.getElementById("count").innerHTML =
+          "(" + content.length + "/200)";
+      }
+      counter();
     </script>
   </body>
 </html>
