@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>가위바위보 게임</title>
+  </head>
+  <style>
+    #computer {
+      width: 165px;
+      height: 200px;
+    }
+  </style>
+  <body>
+    <div id="computer"></div>
+    <div>
+      <button id="scissors">가위</button>
+      <button id="rock">바위</button>
+      <button id="paper">보</button>
+    </div>
+    <div id="score">0</div>
+    <script>
+      const $computer = document.querySelector("#computer");
+      const $scissors = document.querySelector("#scissors");
+      const $rock = document.querySelector("#rock");
+      const $paper = document.querySelector("#paper");
+      const $score = document.querySelector("#score");
+      const img_url = "./rsp.png";
+
+      $computer.style.background = `url(${img_url}) 0 0`;
+      $computer.style.backgroundSize = "auto 200px";
+      const rspX = {
+        scissors: "0",
+        rock: "-220px",
+        paper: "-440px",
+      };
+      let computerChoice = "scissors";
+      const changeComputerHand = () => {
+        if (computerChoice == "rock") {
+          computerChoice = "paper";
+        } else if (computerChoice == "paper") {
+          computerChoice = "scissors";
+        } else if (computerChoice == "scissors") {
+          computerChoice = "rock";
+        }
+        $computer.style.background = `url(${img_url}) ${rspX[computerChoice]} 0`;
+        $computer.style.backgroundSize = "auto 200px";
+      };
+
+      let intervalID = setInterval(changeComputerHand, 50);
+
+      // 가위바위보 점수표
+      const scoreTable = {
+        scissors: 1,
+        rock: 0,
+        paper: -1,
+      };
+
+      let clickable = true;
+      let total = 0;
+      let userWin = 0;
+      let computerWin = 0;
+      const clickButton = (e) => {
+        if (!clickable) return;
+
+        clickable = false;
+        const myChoice =
+          e.target.textContent === "바위"
+            ? "rock"
+            : e.target.textContent === "가위"
+            ? "scissors"
+            : "paper";
+        const myScore = scoreTable[myChoice];
+        const computerScore = scoreTable[computerChoice];
+        const diff = myScore - computerScore;
+
+        let msg;
+
+        if (diff === 2 || diff == -1) {
+          userWin += 1;
+          total += 1;
+          msg = "승리";
+        } else if (diff === -2 || diff == 1) {
+          computerWin += 1;
+          total += 1;
+          msg = "패배";
+        } else {
+          msg = "무승부";
+        }
+
+        clearInterval(intervalID);
+        if (total < 5 && userWin < 3 && computerWin < 3) {
+          $score.textContent = `${msg} ${userWin} : ${computerWin}`;
+          setTimeout(() => {
+            clickable = true;
+            intervalID = setInterval(changeComputerHand, 50);
+          }, 1000);
+        } else if (userWin === 3) {
+          $score.textContent = `사용자의 승리 ${userWin} : ${computerWin}`;
+        } else if (computerWin === 3) {
+          $score.textContent = `컴퓨터의 승리 ${userWin} : ${computerWin}`;
+        }
+      };
+      $scissors.addEventListener("click", clickButton);
+      $rock.addEventListener("click", clickButton);
+      $paper.addEventListener("click", clickButton);
+    </script>
+  </body>
+</html>
